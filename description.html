@@ -417,6 +417,39 @@ head(dataDisease)</code></pre>
 ## 3 severe pre-eclampsia   57</code></pre>
 </div>
 </div>
+<div id="download-data" class="section level1">
+<h1>Download data</h1>
+<p>To retrieve the data from SRA to our instance in AWS, there are some
+options</p>
+<ul>
+<li>Classical approach: using sratoolkit</li>
+</ul>
+<p>source: <a href="https://github.com/ncbi/sra-tools" class="uri">https://github.com/ncbi/sra-tools</a></p>
+<pre class="bash"><code>
+wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-centos_linux64.tar.gz
+ tar -zxf sratoolkit.current-centos_linux64.tar.gz 
+
+export PATH=$PATH:$PWD/sratoolkit.3.0.0-centos_linux64/bin</code></pre>
+<div id="configure-vdb" class="section level2">
+<h2>Configure vdb</h2>
+<pre class="bash"><code>vdb-config --interactive</code></pre>
+<p>Source: <a href="https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration" class="uri">https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration</a></p>
+</div>
+<div id="test" class="section level2">
+<h2>Test</h2>
+<pre class="bash"><code>fastq-dump --stdout -X 2 SRR390728</code></pre>
+</div>
+<div id="option-more-efficient" class="section level2">
+<h2>Option more efficient:</h2>
+<p>Launch using tmux:</p>
+<pre class="bash"><code>tmux</code></pre>
+<pre class="bash"><code>
+prefetch SRR17332994
+
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &amp;
+</code></pre>
+</div>
+</div>
 
 
 

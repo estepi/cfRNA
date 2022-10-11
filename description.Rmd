@@ -41,3 +41,49 @@ head(dataDisease)
 ```
 
 
+# Download data
+
+To retrieve the data from SRA to our instance in AWS, there are some options
+
+* Classical approach: using sratoolkit
+
+source: https://github.com/ncbi/sra-tools
+
+
+
+```{bash getsratoolkit, eval=FALSE}
+
+wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-centos_linux64.tar.gz
+ tar -zxf sratoolkit.current-centos_linux64.tar.gz 
+
+export PATH=$PATH:$PWD/sratoolkit.3.0.0-centos_linux64/bin
+```
+
+## Configure vdb
+```{bash configure, eval=FALSE}
+vdb-config --interactive
+```
+
+Source: https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration
+
+## Test
+
+```{bash dump, eval=FALSE}
+fastq-dump --stdout -X 2 SRR390728
+```
+
+## Option more efficient:
+
+Launch using tmux:
+
+```{bash tmux, eval=FALSE}
+tmux
+```
+
+```{bash fetch, eval=FALSE}
+
+prefetch SRR17332994
+
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &
+
+```
