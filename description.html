@@ -421,26 +421,25 @@ head(dataDisease)</code></pre>
 <h1>Download data</h1>
 <p>To retrieve the data from SRA to our instance in AWS, there are some
 options</p>
-<ul>
-<li>Classical approach: using sratoolkit</li>
-</ul>
+<div id="classical-approach-using-sratoolkit" class="section level2">
+<h2>Classical approach: using sratoolkit</h2>
 <p>source: <a href="https://github.com/ncbi/sra-tools" class="uri">https://github.com/ncbi/sra-tools</a></p>
 <pre class="bash"><code>
 wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-centos_linux64.tar.gz
  tar -zxf sratoolkit.current-centos_linux64.tar.gz 
 
 export PATH=$PATH:$PWD/sratoolkit.3.0.0-centos_linux64/bin</code></pre>
-<div id="configure-vdb" class="section level2">
-<h2>Configure vdb</h2>
+<div id="configure-vdb" class="section level3">
+<h3>Configure vdb</h3>
 <pre class="bash"><code>vdb-config --interactive</code></pre>
 <p>Source: <a href="https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration" class="uri">https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration</a></p>
 </div>
-<div id="test" class="section level2">
-<h2>Test</h2>
+<div id="test" class="section level3">
+<h3>Test</h3>
 <pre class="bash"><code>fastq-dump --stdout -X 2 SRR390728</code></pre>
 </div>
-<div id="option-more-efficient" class="section level2">
-<h2>Option more efficient:</h2>
+<div id="option-more-efficient" class="section level3">
+<h3>Option more efficient:</h3>
 <p>Launch using tmux:</p>
 <pre class="bash"><code>tmux</code></pre>
 <pre class="bash"><code>
@@ -448,6 +447,17 @@ prefetch SRR17332994
 
 fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &amp;
 </code></pre>
+<p>1 sample: 50 minutes</p>
+</div>
+</div>
+<div id="copying-from-sra-s3-bucket" class="section level2">
+<h2>Copying from SRA S3 Bucket</h2>
+<pre class="bash"><code>aws s3 cp s3://sra-pub-sars-cov2/README.txt
+
+aws s3 ls s3://sra-pub-run-odp/sra/SRR17333143/SRR17333143</code></pre>
+<p>Note: AWS CLI version 2, the latest major version of the AWS CLI, is
+now stable and recommended for general use. For more information, see
+the AWS CLI version 2 installation instructions at: <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html" class="uri">https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html</a></p>
 </div>
 </div>
 

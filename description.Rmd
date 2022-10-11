@@ -45,7 +45,7 @@ head(dataDisease)
 
 To retrieve the data from SRA to our instance in AWS, there are some options
 
-* Classical approach: using sratoolkit
+## Classical approach: using sratoolkit
 
 source: https://github.com/ncbi/sra-tools
 
@@ -59,20 +59,20 @@ wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-cento
 export PATH=$PATH:$PWD/sratoolkit.3.0.0-centos_linux64/bin
 ```
 
-## Configure vdb
+### Configure vdb
 ```{bash configure, eval=FALSE}
 vdb-config --interactive
 ```
 
 Source: https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration
 
-## Test
+### Test
 
 ```{bash dump, eval=FALSE}
 fastq-dump --stdout -X 2 SRR390728
 ```
 
-## Option more efficient:
+### Option more efficient:
 
 Launch using tmux:
 
@@ -87,3 +87,17 @@ prefetch SRR17332994
 fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &
 
 ```
+
+1 sample: 50 minutes
+
+## Copying from SRA S3 Bucket
+
+
+```{bash cps3, eval=FALSE}
+aws s3 cp s3://sra-pub-sars-cov2/README.txt
+
+aws s3 ls s3://sra-pub-run-odp/sra/SRR17333143/SRR17333143
+```
+
+Note: AWS CLI version 2, the latest major version of the AWS CLI, is now stable and recommended for general use. For more information, see the AWS CLI version 2 installation instructions at: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+
