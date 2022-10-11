@@ -377,6 +377,45 @@ sra[1:5,1:5]</code></pre>
 ## 3 SRR17332997 19 weeks of gestation    RNA-Seq        150 13654380750
 ## 4 SRR17332999 12 weeks of gestation    RNA-Seq        150  6920686500
 ## 5 SRR17333000 12 weeks of gestation    RNA-Seq        150  6981052050</code></pre>
+<pre class="r"><code>colnames(sra)</code></pre>
+<pre><code>##  [1] &quot;Run&quot;                  &quot;Age&quot;                  &quot;Assay.Type&quot;          
+##  [4] &quot;AvgSpotLen&quot;           &quot;Bases&quot;                &quot;BIOMATERIAL_PROVIDER&quot;
+##  [7] &quot;BioProject&quot;           &quot;BioSample&quot;            &quot;BioSampleModel&quot;      
+## [10] &quot;Bytes&quot;                &quot;Center.Name&quot;          &quot;Consent&quot;             
+## [13] &quot;DATASTORE.filetype&quot;   &quot;DATASTORE.provider&quot;   &quot;DATASTORE.region&quot;    
+## [16] &quot;Experiment&quot;           &quot;Instrument&quot;           &quot;Isolate&quot;             
+## [19] &quot;Library.Name&quot;         &quot;LibraryLayout&quot;        &quot;LibrarySelection&quot;    
+## [22] &quot;LibrarySource&quot;        &quot;Organism&quot;             &quot;Platform&quot;            
+## [25] &quot;ReleaseDate&quot;          &quot;Sample.Name&quot;          &quot;sex&quot;                 
+## [28] &quot;SRA.Study&quot;            &quot;Tissue&quot;               &quot;disease&quot;</code></pre>
+<pre class="r"><code>dim(sra)</code></pre>
+<pre><code>## [1] 404  30</code></pre>
+<div id="some-categorical-variables" class="section level2">
+<h2>Some categorical variables</h2>
+<pre class="r"><code>data &lt;- data.frame(table(sra$Age))
+head(data)</code></pre>
+<pre><code>##                    Var1 Freq
+## 1   0 weeks post-partum   44
+## 2 0.5 weeks post-partum    1
+## 3   1 weeks post-partum   18
+## 4 10 weeks of gestation   19
+## 5 11 weeks of gestation   46
+## 6 12 weeks of gestation   29</code></pre>
+<pre class="r"><code>dataSex&lt;-data.frame(table(sra$sex))
+head(dataSex)</code></pre>
+<pre><code>##     Var1 Freq
+## 1 female  404</code></pre>
+<pre class="r"><code>table(sra$Tissue)</code></pre>
+<pre><code>## 
+## blood plasma 
+##          404</code></pre>
+<pre class="r"><code>dataDisease&lt;-data.frame(table(sra$disease))
+head(dataDisease)</code></pre>
+<pre><code>##                   Var1 Freq
+## 1                       287
+## 2        pre-eclampsia   60
+## 3 severe pre-eclampsia   57</code></pre>
+</div>
 </div>
 
 

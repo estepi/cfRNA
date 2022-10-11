@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
 ```
 
 # Data description
@@ -16,6 +17,27 @@ Liquid biopsies that measure circulating cell-free RNA (cfRNA) offer an unpreced
 ```{r readTable, eval=TRUE}
 sra<- read.csv("SraRunTable.txt")
 sra[1:5,1:5]
+colnames(sra)
+dim(sra)
+
+```
+
+## Some categorical variables
+
+
+```{r descCat, eval=TRUE}
+
+data <- data.frame(table(sra$Age))
+head(data)
+
+dataSex<-data.frame(table(sra$sex))
+head(dataSex)
+
+table(sra$Tissue)
+
+dataDisease<-data.frame(table(sra$disease))
+head(dataDisease)
+
 ```
 
 
