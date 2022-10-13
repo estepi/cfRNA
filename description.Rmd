@@ -230,7 +230,16 @@ See the installation instructions for more help.
 sudo yum install epel-release
 sudo amazon-linux-extras install epel
 sudo yum install python-pip
+pip3 install multiqc
 ```
+
+Finally run MultiQC on our samples:
+
+```{bash multiQC, eval=FALSE}
+ multiqc -p dataFetch/ 
+```
+
+![multiqc](multiqc.png)
 
 
 ## Check transcript integrity
