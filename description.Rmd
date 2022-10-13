@@ -90,14 +90,41 @@ fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass 
 
 1 sample: 50 minutes
 
+
+
+## Accessing SRA Data in AWS
+
+* https://www.ncbi.nlm.nih.gov/sra/docs/sra-aws-download/ 
+* https://s3.console.aws.amazon.com/s3/buckets/sra-pub-src-2/?region=us-east-1&tab=objects
+
+To download files from the AWS Console  using a browser, visit the HTTPS URL for the Coronaviridae dataset, Public SRA data, or Public user-submitted files respectively:
+
+* https://s3.console.aws.amazon.com/s3/buckets/sra-pub-sars-cov2/
+* https://s3.console.aws.amazon.com/s3/buckets/sra-pub-run-odp/
+* https://s3.console.aws.amazon.com/s3/buckets/sra-pub-src-2/
+
+From there you can navigate the directory structure using the provided graphical interface and you can search a given directory for your accession of interest using the provided search box near the top of the page. Once you have navigated to a specific file of interest you can click the Object URL link or use the Object actions button to copy the file to your own S3 bucket or download a copy to local storage.
+
+To access files from within AWS, e.g. from an EC2 instance, you can use the AWS CLI  to perform an S3 copy or sync, using a command like this:
+
+
+These data can also be accessed using various other tools and libraries. Access to files in the AWS Registry of Open Data is free. This is true whether you use the HTTPS or S3 URL. For S3 URLs, the transfer is free even if it crosses an AWS region boundary; there is no inter-regional data transfer fee.
+
+If you don't know the Run accessions you are interested in, you can start by searching in the SRA Run Selector,
+AWS Athena, or SRA Entrez.
+
+
 ## Copying from SRA S3 Bucket
+
+### Already created instance:
+![config](/Users/estepi/Documents/aws/config.png)
 
 
 ```{bash cps3, eval=FALSE}
 aws s3 cp s3://sra-pub-sars-cov2/README.txt
-
 aws s3 ls s3://sra-pub-run-odp/sra/SRR17333143/SRR17333143
 ```
+Could not connect to the endpoint URL: "https://sra-pub-run-odp.s3.EU.amazonaws.com/?list-type=2&delimiter=%2F&prefix=sra%2FSRR17333143%2FSRR17333143&encoding-type=url"
 
-Note: AWS CLI version 2, the latest major version of the AWS CLI, is now stable and recommended for general use. For more information, see the AWS CLI version 2 installation instructions at: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
 
+![error1](/Users/estepi/Documents/aws/output.png)
