@@ -68,7 +68,7 @@ Source: https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration
 
 ### Test
 
-```{bash dump, eval=FALSE}
+```{bash dump1, eval=FALSE}
 fastq-dump --stdout -X 2 SRR390728
 ```
 
@@ -83,12 +83,16 @@ tmux
 ```{bash fetch, eval=FALSE}
 
 prefetch SRR17332994
+```
+
+1 sample: 1 minute
+
+```{bash dump2, eval=FALSE}
 
 fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &
 
 ```
 
-1 sample: 50 minutes
 
 
 
@@ -121,10 +125,52 @@ AWS Athena, or SRA Entrez.
 
 
 ```{bash cps3, eval=FALSE}
+aws s3 ls s3://sra-pub-sars-cov2/
+
 aws s3 cp s3://sra-pub-sars-cov2/README.txt
+
 aws s3 ls s3://sra-pub-run-odp/sra/SRR17333143/SRR17333143
 ```
 Could not connect to the endpoint URL: "https://sra-pub-run-odp.s3.EU.amazonaws.com/?list-type=2&delimiter=%2F&prefix=sra%2FSRR17333143%2FSRR17333143&encoding-type=url"
 
 
 ![error1](/Users/estepi/Documents/aws/output.png)
+
+##  New instance
+
+- Configure the IAM Instance Profile to "AccesoS3" before launching
+
+```{bash cps4, eval=FALSE}
+aws s3 ls s3://sra-pub-sars-cov2/
+
+aws s3 cp s3://sra-pub-sars-cov2/README.txt
+
+aws s3 ls s3://sra-pub-run-odp/sra/SRR17333143/SRR17333143
+```
+
+![new](/Users/estepi/Documents/aws/new.png)
+
+
+
+```{bash cps5, eval=FALSE}
+aws s3 cp s3://sra-pub-run-odp/sra/SRR17332994/SRR17332994 .
+```
+download: s3://sra-pub-run-odp/sra/SRR17332994/SRR17332994 to ./SRR17332994
+~ 1 minute
+
+
+Then, we prepare extract files:
+
+```{bash dump, eval=FALSE}
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &
+```
+
+Using prefetch:
+
+```{bash fetch2, eval=FALSE}
+
+prefetch SRR17332994
+
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &
+
+```
