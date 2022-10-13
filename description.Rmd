@@ -14,6 +14,9 @@ library(ggplot2)
 
 Liquid biopsies that measure circulating cell-free RNA (cfRNA) offer an unprecedented opportunity to noninvasively study the development of pregnancy-related complications and to bridge gaps in clinical care. Here, we sequenced cfRNA from 404 blood plasma samples (199 pregnant mothers) to identify and validate cfRNA transcriptomic changes that are associated with preeclampsia (PE), a multi-organ syndrome which is the second largest cause of maternal death globally. For each individual, samples were collected at one or more timepoints across gestation. For some, samples were also collected at least once post-partum
 
+source https://www.nature.com/articles/s41586-022-04410-z
+
+
 ```{r readTable, eval=TRUE}
 sra<- read.csv("SraRunTable.txt")
 sra[1:5,1:5]
@@ -179,4 +182,82 @@ fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass 
 * fastq-dump spends ~50 minutes for conversion
 
 ## What next?
+
 Which is the best strategy for proccessing  ~400 samples
+
+
+# Quality control
+
+## Fastqc
+
+ * Installation
+
+- https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+
+* We should install JAVA first. Any clue? 
+
+```{bash java, eval=FALSE}
+
+ sudo yum install java-1.8.0-openjdk-devel
+
+```
+
+Then we get fastqc:
+
+```{bash fastqc, eval=FALSE}
+
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+
+chmod ug+x fastqc
+export PATH=$PATH:/home/ec2-user/software/FastQC/
+```
+
+ * Run
+
+```{bash fastqcRun, eval=FALSE}
+fastqc  sample.fq
+```
+ 
+## MultiQC
+
+Build a report to visualize raw data
+
+To install MultiQC, simply run pip install multiqc on the command line.
+If you use conda, you can run conda install -c bioconda multiqc instead.
+See the installation instructions for more help.
+
+```{bash pipInstall, eval=FALSE}
+sudo yum install epel-release
+sudo amazon-linux-extras install epel
+sudo yum install python-pip
+```
+
+
+## Check transcript integrity
+
+* Sample quality filtering
+For every sequenced sample, we estimated three quality parameters as previously described.
+
+* RNA degradation
+To estimate RNA degradation in each sample, we first counted the number of reads per exon and then annotated each exon with its corresponding gene ID and exon number using htseq-count. Using these annotations, we measured the frequency of genes for which all reads mapped exclusively to the 3′-most exon as compared to the total number of genes detected. RNA degradation for a given sample can then be approximated as the fraction of genes in which all reads mapped to the 3′-most exon. 
+
+* Gene Counting
+To estimate the number of reads that mapped to genes, we summed counts for all genes per sample using the counts table generated from bioinformatic processing above. 
+
+* DNA contamination
+To estimate DNA contamination, we quantified the ratio of reads that mapped to intronic as compared to exonic regions of the genome.
+
+
+After measuring these metrics across nearly 700 samples, we empirically estimated RNA degradation and DNA contamination’s 95th percentile bound. 
+
+We considered any given sample an outlier, low-quality sample if its value for at least one of these metrics was greater than or equal to the 95th percentile bound or if no reads were assigned to genes.
+
+Once values for each metric were estimated across the entire dataset, we visualized: 
+(1) whether low-quality samples clustered separately using hierarchical clustering (average linkage, Euclidean distance metric); and 
+(2) whether sample quality drove variance in gene meas- urements using principal component analysis (PCA). 
+
+After confirming sample quality, 404 samples from 199 mothers (142 normotensive, 57 with preeclampsia) were included in the final analysis (Supplementary Table 1). 
+
+Specifically, 209, 106 and 89 samples from 73, 39 and 87 participants (49, 32 and 61 normotensive; 24, 7 and 26 with preeclampsia) were included in discovery, validation 1 and validation 2, respectively.
+
+* the bioinformatic pipeline was managed using Snakemake 

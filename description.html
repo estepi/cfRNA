@@ -369,6 +369,7 @@ associated with preeclampsia (PE), a multi-organ syndrome which is the
 second largest cause of maternal death globally. For each individual,
 samples were collected at one or more timepoints across gestation. For
 some, samples were also collected at least once post-partum</p>
+<p>source <a href="https://www.nature.com/articles/s41586-022-04410-z" class="uri">https://www.nature.com/articles/s41586-022-04410-z</a></p>
 <pre class="r"><code>sra&lt;- read.csv(&quot;SraRunTable.txt&quot;)
 sra[1:5,1:5]</code></pre>
 <pre><code>##           Run                   Age Assay.Type AvgSpotLen       Bases
@@ -540,6 +541,81 @@ fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass 
 <div id="what-next" class="section level2">
 <h2>What next?</h2>
 <p>Which is the best strategy for proccessing ~400 samples</p>
+</div>
+</div>
+<div id="quality-control" class="section level1">
+<h1>Quality control</h1>
+<div id="fastqc" class="section level2">
+<h2>Fastqc</h2>
+<ul>
+<li><p>Installation</p></li>
+<li><p><a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/" class="uri">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></p></li>
+<li><p>We should install JAVA first. Any clue?</p></li>
+</ul>
+<pre class="bash"><code>
+ sudo yum install java-1.8.0-openjdk-devel
+</code></pre>
+<p>Then we get fastqc:</p>
+<pre class="bash"><code>
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+
+chmod ug+x fastqc
+export PATH=$PATH:/home/ec2-user/software/FastQC/</code></pre>
+<ul>
+<li>Run</li>
+</ul>
+<pre class="bash"><code>fastqc  sample.fq</code></pre>
+</div>
+<div id="multiqc" class="section level2">
+<h2>MultiQC</h2>
+<p>Build a report to visualize raw data</p>
+<p>To install MultiQC, simply run pip install multiqc on the command
+line. If you use conda, you can run conda install -c bioconda multiqc
+instead. See the installation instructions for more help.</p>
+<pre class="bash"><code>sudo yum install epel-release
+sudo amazon-linux-extras install epel
+sudo yum install python-pip</code></pre>
+</div>
+<div id="check-transcript-integrity" class="section level2">
+<h2>Check transcript integrity</h2>
+<ul>
+<li><p>Sample quality filtering For every sequenced sample, we estimated
+three quality parameters as previously described.</p></li>
+<li><p>RNA degradation To estimate RNA degradation in each sample, we
+first counted the number of reads per exon and then annotated each exon
+with its corresponding gene ID and exon number using htseq-count. Using
+these annotations, we measured the frequency of genes for which all
+reads mapped exclusively to the 3′-most exon as compared to the total
+number of genes detected. RNA degradation for a given sample can then be
+approximated as the fraction of genes in which all reads mapped to the
+3′-most exon.</p></li>
+<li><p>Gene Counting To estimate the number of reads that mapped to
+genes, we summed counts for all genes per sample using the counts table
+generated from bioinformatic processing above.</p></li>
+<li><p>DNA contamination To estimate DNA contamination, we quantified
+the ratio of reads that mapped to intronic as compared to exonic regions
+of the genome.</p></li>
+</ul>
+<p>After measuring these metrics across nearly 700 samples, we
+empirically estimated RNA degradation and DNA contamination’s 95th
+percentile bound.</p>
+<p>We considered any given sample an outlier, low-quality sample if its
+value for at least one of these metrics was greater than or equal to the
+95th percentile bound or if no reads were assigned to genes.</p>
+<p>Once values for each metric were estimated across the entire dataset,
+we visualized: (1) whether low-quality samples clustered separately
+using hierarchical clustering (average linkage, Euclidean distance
+metric); and (2) whether sample quality drove variance in gene meas-
+urements using principal component analysis (PCA).</p>
+<p>After confirming sample quality, 404 samples from 199 mothers (142
+normotensive, 57 with preeclampsia) were included in the final analysis
+(Supplementary Table 1).</p>
+<p>Specifically, 209, 106 and 89 samples from 73, 39 and 87 participants
+(49, 32 and 61 normotensive; 24, 7 and 26 with preeclampsia) were
+included in discovery, validation 1 and validation 2, respectively.</p>
+<ul>
+<li>the bioinformatic pipeline was managed using Snakemake</li>
+</ul>
 </div>
 </div>
 
