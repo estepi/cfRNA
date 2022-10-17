@@ -1,0 +1,305 @@
+---
+title: "Requiered software for the analysis of AS using RNA-Seq"
+author: "Estefania Mancini"
+date: "2022-10-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+# Project structure
+We propose this structure:
+
+* DATA: divided by project
+* SOFTWARE: common to all projects
+* REFERECES (genome, transcriptome, etc)
+
+# Data retrieval from SRA
+
+To retrieve the data from SRA to our instance in AWS, there are some options
+
+## Classical approach: using sratoolkit
+
+source: https://github.com/ncbi/sra-tools
+
+
+```{bash getsratoolkit, eval=FALSE}
+
+wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-centos_linux64.tar.gz
+ tar -zxf sratoolkit.current-centos_linux64.tar.gz 
+
+export PATH=$PATH:$PWD/sratoolkit.3.0.0-centos_linux64/bin
+```
+
+### Configure vdb
+```{bash configure, eval=FALSE}
+vdb-config --interactive
+```
+
+Source: https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration
+
+### Test
+
+```{bash dump1, eval=FALSE}
+fastq-dump --stdout -X 2 SRR390728
+```
+
+### Option more efficient:
+
+Launch using tmux:
+
+```{bash tmux, eval=FALSE}
+tmux
+```
+
+```{bash fetch, eval=FALSE}
+
+prefetch SRR17332994
+```
+
+1 sample: 1 minute
+
+```{bash dump2, eval=FALSE}
+
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &
+
+```
+
+
+## Accessing SRA Data in AWS
+
+* https://www.ncbi.nlm.nih.gov/sra/docs/sra-aws-download/ 
+* https://s3.console.aws.amazon.com/s3/buckets/sra-pub-src-2/?region=us-east-1&tab=objects
+
+To download files from the AWS Console  using a browser, visit the HTTPS URL for the Coronaviridae dataset, Public SRA data, or Public user-submitted files respectively:
+
+* https://s3.console.aws.amazon.com/s3/buckets/sra-pub-sars-cov2/
+* https://s3.console.aws.amazon.com/s3/buckets/sra-pub-run-odp/
+* https://s3.console.aws.amazon.com/s3/buckets/sra-pub-src-2/
+
+From there you can navigate the directory structure using the provided graphical interface and you can search a given directory for your accession of interest using the provided search box near the top of the page. Once you have navigated to a specific file of interest you can click the Object URL link or use the Object actions button to copy the file to your own S3 bucket or download a copy to local storage.
+
+To access files from within AWS, e.g. from an EC2 instance, you can use the AWS CLI  to perform an S3 copy or sync, using a command like this:
+
+These data can also be accessed using various other tools and libraries. Access to files in the AWS Registry of Open Data is free. This is true whether you use the HTTPS or S3 URL. For S3 URLs, the transfer is free even if it crosses an AWS region boundary; there is no inter-regional data transfer fee.
+
+If you don't know the Run accessions you are interested in, you can start by searching in the SRA Run Selector,
+AWS Athena, or SRA Entrez.
+
+
+## Copying from SRA S3 Bucket
+
+
+```{bash cps3, eval=FALSE}
+aws s3 ls s3://sra-pub-sars-cov2/
+
+aws s3 cp s3://sra-pub-sars-cov2/README.txt
+
+aws s3 ls s3://sra-pub-run-odp/sra/SRR17333143/SRR17333143
+```
+Could not connect to the endpoint URL: "https://sra-pub-run-odp.s3.EU.amazonaws.com/?list-type=2&delimiter=%2F&prefix=sra%2FSRR17333143%2FSRR17333143&encoding-type=url"
+
+
+
+##  New instance
+
+- Configure the IAM Instance Profile to "AccesoS3" before launching
+
+```{bash cps4, eval=FALSE}
+aws s3 ls s3://sra-pub-sars-cov2/
+
+aws s3 cp s3://sra-pub-sars-cov2/README.txt
+
+aws s3 ls s3://sra-pub-run-odp/sra/SRR17333143/SRR17333143
+```
+
+
+```{bash cps5, eval=FALSE}
+aws s3 cp s3://sra-pub-run-odp/sra/SRR17332994/SRR17332994 .
+```
+download: s3://sra-pub-run-odp/sra/SRR17332994/SRR17332994 to ./SRR17332994
+~ 1 minute
+
+
+Then, we prepare extract files:
+
+```{bash dump, eval=FALSE}
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &
+```
+
+Using prefetch:
+
+```{bash fetch2, eval=FALSE}
+
+prefetch SRR17332994
+
+fastq-dump --outdir fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17332994 &
+
+```
+
+
+* fastq-dump spends ~50 minutes for conversion
+
+## What next?
+
+Which is the best strategy for proccessing  ~400 samples
+
+
+# Quality control
+
+## Fastqc
+
+ * Installation
+
+- https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+
+* We should install JAVA first. Any clue? 
+
+```{bash java, eval=FALSE}
+
+ sudo yum install java-1.8.0-openjdk-devel
+
+```
+
+Then we get fastqc:
+
+```{bash fastqc, eval=FALSE}
+
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+
+chmod ug+x fastqc
+export PATH=$PATH:/home/ec2-user/software/FastQC/
+```
+
+ * Run
+
+```{bash fastqcRun, eval=FALSE}
+fastqc  sample.fq
+```
+ 
+## MultiQC
+
+Build a report to visualize raw data
+
+To install MultiQC, simply run pip install multiqc on the command line.
+If you use conda, you can run conda install -c bioconda multiqc instead.
+See the installation instructions for more help.
+
+```{bash pipInstall, eval=FALSE}
+sudo yum install epel-release
+sudo amazon-linux-extras install epel
+sudo yum install python-pip
+pip3 install multiqc
+```
+
+Finally run MultiQC on our samples:
+
+```{bash multiQC, eval=FALSE}
+ multiqc -p dataFetch/ 
+```
+
+# Alignments
+
+## Download references
+
+From  Gencode v39:  https://www.gencodegenes.org/human/release_39.html
+
+* GTF superset: 
+```{bash gtf, eval=FALSE}
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.chr_patch_hapl_scaff.annotation.gtf.gz .
+```
+
+Total wall clock time: 1m 7s (66 sec)
+Downloaded: 1 files, 49M in 1m 6s (751 KB/s)
+
+* Fasta Transcriptome:
+
+```{bash transcriptome, eval=FALSE}
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.transcripts.fa.gz
+```
+45 sec
+
+
+* Fasta genome: 
+
+```{bash genome, eval=FALSE}
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh38.p13.genome.fa.gz .
+```
+Total wall clock time: 18m 43s
+Downloaded: 1 files, 848M in 18m 42s (774 KB/s)
+
+## STAR
+
+https://github.com/alexdobin/STAR
+
+Installation:
+
+*  Get latest STAR source from releases
+
+```{bash STAR, eval=FALSE}
+wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz
+```
+2 sec
+
+```{bash tar, eval=FALSE}
+tar xvzf 2.7.10a.tar.gz 
+```
+
+* Compile
+
+
+```{bash zlib, eval=FALSE}
+yum install zlib
+yum install  install zlib1g-dev
+```
+
+```{bash gcc, eval=FALSE}
+sudo yum -y install gcc
+sudo  yum install gcc-c++
+```
+Installed: gcc.x86_64 0:7.3.1-15.amzn2    
+  
+
+```{bash compileSTAR2, eval=FALSE}
+make STAR
+./STAR --help
+```
+Done! 
+
+
+# Gene quantification
+
+We use STAR default output for gene count
+
+
+# Transcript quantification
+
+## Salmon  (favourite)
+## RSEM    (2nd favourite)
+
+# Exon/intron quantification
+
+## ASpli
+
+* Install R:
+
+```{bash bioconductor, eval=FALSE}
+sudo yum install epel-release
+sudo yum install R
+```
+
+R --version
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-redhat-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under the terms of the
+GNU General Public License versions 2 or 3.
+For more information about these matters see
+https://www.gnu.org/licenses/.
+
+* Hay que ver como instalar R ultima version!!!
