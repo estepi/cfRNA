@@ -272,13 +272,27 @@ sudo ln -s /home/ec2-user/software/STAR-2.7.10a/source/STAR /usr/local/bin/STAR
 ```
 Done! 
 
-* Make an index for 75pb
-```{bash genomeIndex, eval=FALSE}
+* Make an index for 75pb, basic options:
 
+--runThreadN NumberOfThreads
+
+--runMode genomeGenerate
+
+--genomeDir /path/to/genomeDir: This directory has to be created (with mkdir) before STAR run and needs to have writing permissions.
+
+--genomeFastaFiles /path/to/genome/fasta1: specifies one or more FASTA files with the genome reference sequences.
+
+
+--sjdbGTFfile /path/to/annotations.gtf
+
+--sjdbOverhang ReadLength-1
+
+```{bash genomeIndex, eval=FALSE}
+STAR --runThreadN 4 --runMode genomeGenerate --genomeDir /home/ec2-user/references/GRCh38_STAR --genomeFastaFiles /home/ec2-user/references/GRCh38.p13.genome.fa --sjdbGTFfile /home/ec2-user/references/gencode.v39.chr_patch_hapl_scaff.annotation.gtf --sjdbOverhang 74 
 ```
 
-
-
+* Por que ENCODE and not ENSEMBL?
+ 
 # Gene quantification
 
 We use STAR default output for gene count

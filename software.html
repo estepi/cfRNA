@@ -539,10 +539,10 @@ pip3 install multiqc</code></pre>
 </div>
 <div id="star" class="section level2">
 <h2>STAR</h2>
-<p><a href="https://github.com/alexdobin/STAR" class="uri">https://github.com/alexdobin/STAR</a></p>
-<p>Installation:</p>
+<p><a href="https://github.com/alexdobin/STAR" class="uri">https://github.com/alexdobin/STAR</a> <a href="https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf" class="uri">https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf</a></p>
 <ul>
-<li>Get latest STAR source from releases</li>
+<li><p>Installation:</p></li>
+<li><p>Get latest STAR source from releases</p></li>
 </ul>
 <pre class="bash"><code>wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz</code></pre>
 <p>2 sec</p>
@@ -560,6 +560,21 @@ sudo  yum install gcc-c++</code></pre>
 
 sudo ln -s /home/ec2-user/software/STAR-2.7.10a/source/STAR /usr/local/bin/STAR</code></pre>
 <p>Done!</p>
+<ul>
+<li>Make an index for 75pb, basic options:</li>
+</ul>
+<p>–runThreadN NumberOfThreads</p>
+<p>–runMode genomeGenerate</p>
+<p>–genomeDir /path/to/genomeDir: This directory has to be created (with
+mkdir) before STAR run and needs to have writing permissions.</p>
+<p>–genomeFastaFiles /path/to/genome/fasta1: specifies one or more FASTA
+files with the genome reference sequences.</p>
+<p>–sjdbGTFfile /path/to/annotations.gtf</p>
+<p>–sjdbOverhang ReadLength-1</p>
+<pre class="bash"><code>STAR --runThreadN 4 --runMode genomeGenerate --genomeDir /home/ec2-user/references/GRCh38_STAR --genomeFastaFiles /home/ec2-user/references/GRCh38.p13.genome.fa --sjdbGTFfile /home/ec2-user/references/gencode.v39.chr_patch_hapl_scaff.annotation.gtf --sjdbOverhang 74 </code></pre>
+<ul>
+<li>Por que ENCODE and not ENSEMBL?</li>
+</ul>
 </div>
 </div>
 <div id="gene-quantification" class="section level1">
