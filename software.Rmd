@@ -234,10 +234,11 @@ Downloaded: 1 files, 848M in 18m 42s (774 KB/s)
 ## STAR
 
 https://github.com/alexdobin/STAR
+https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
 
-Installation:
+* Installation:
 
-*  Get latest STAR source from releases
+* Get latest STAR source from releases
 
 ```{bash STAR, eval=FALSE}
 wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz
@@ -266,8 +267,16 @@ Installed: gcc.x86_64 0:7.3.1-15.amzn2
 ```{bash compileSTAR2, eval=FALSE}
 make STAR
 ./STAR --help
+
+sudo ln -s /home/ec2-user/software/STAR-2.7.10a/source/STAR /usr/local/bin/STAR
 ```
 Done! 
+
+* Make an index for 75pb
+```{bash genomeIndex, eval=FALSE}
+
+```
+
 
 
 # Gene quantification
@@ -284,22 +293,127 @@ We use STAR default output for gene count
 
 ## ASpli
 
-* Install R:
 
-```{bash bioconductor, eval=FALSE}
-sudo yum install epel-release
-sudo yum install R
+* Install R latest version from source
+
+https://docs.rstudio.com/resources/install-r-source/
+
+```{bash Rsource, eval=FALSE}
+sudo yum-builddep R
 ```
 
-R --version
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-redhat-linux-gnu (64-bit)
+Check which is last version:
+https://cran.rstudio.com/src/base/
 
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under the terms of the
-GNU General Public License versions 2 or 3.
-For more information about these matters see
-https://www.gnu.org/licenses/.
+Today is   R-4.2.1.tar.gz          
 
-* Hay que ver como instalar R ultima version!!!
+```{bash Rversion, eval=FALSE}
+export R_VERSION=4.2.1
+```
+
+```{bash RversionVar, eval=FALSE}
+curl -O https://cran.rstudio.com/src/base/R-4/R-${R_VERSION}.tar.gz
+#0 sec
+tar -xzvf R-${R_VERSION}.tar.gz
+cd R-${R_VERSION}
+```
+
+* Install
+
+```{bash Rconf, eval=FALSE}
+
+./configure \
+    --prefix=/opt/R/${R_VERSION} \
+    --enable-memory-profiling \
+    --enable-R-shlib \
+    --with-blas \
+    --with-lapack
+```
+
+
+* Build and install R
+
+Build and install R by running the following commands:
+
+```{bash Rmake, eval=FALSE}
+make
+sudo make install
+```
+
+* Verify R installation
+Test that R was successfully installed by running:
+
+
+```{bash Rversionsource, eval=FALSE}
+/opt/R/${R_VERSION}/bin/R --version
+```
+
+* Create a symlink to R
+To ensure that R is available on the default system PATH variable, create symbolic links to the version of R that you installed:
+
+```{bash symlink, eval=FALSE}
+sudo ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R
+sudo ln -s /opt/R/${R_VERSION}/bin/Rscript /usr/local/bin/Rscript
+```
+
+
+* (Optional) Install recommended packages
+We recommend installing several optional system dependencies that are used by common R packages. Additional information about installing them is provided in our documentation.
+
+
+
+*  Bioconductor
+
+```{R bioc, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install(version = "3.15")
+```
+
+
+```{bash xml2, eval=FALSE}
+sudo yum install libxml2-devel
+yum install make gcc perl pcre-devel zlib-devel
+wget https://ftp.openssl.org/source/openssl-3.0.5.tar.gz
+
+sudo yum install perl-IPC-Cmd
+
+tar xvf openssl-3.0.5.tar.gz 
+cd 
+./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic
+
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
+echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> ~/.bashrc
+openssl version
+```
+
+OpenSSL 3.0.5 5 Jul 2022 (Library: OpenSSL 3.0.5 5 Jul 2022)
+
+* Useful packages from Bioconductor
+
+```{R ASpli, eval=FALSE}
+BiocManager::install("biomaRt")
+BiocManager::install("rtracklayer")
+BiocManager::install("AnnotationDbi")
+BiocManager::install("GenomicFeatures")
+BiocManager::install("ensembldb")
+BiocManager::install("BSgenome")
+BiocManager::install("BSgenome")
+BiocManager::install("biovizBase")
+```
+
+
+* ASpli
+
+```{R ASpli0, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ASpli")
+```
+
+* Other useful packages:
+```{R packages, eval=FALSE}
+install.packages("ggplot2")
+install.packages("rmarkdown")
+```
+
