@@ -292,16 +292,55 @@ STAR --runThreadN 4 --runMode genomeGenerate --genomeDir /home/ec2-user/referenc
 ```
 
 * Por que ENCODE and not ENSEMBL?
+* Me quede sin memoria
  
 # Gene quantification
 
 We use STAR default output for gene count
 
-
 # Transcript quantification
 
 ## Salmon  (favourite)
+
+* Installation
+https://docs.anaconda.com/anaconda/install/linux/
+https://anaconda.org/bioconda/salmon
+
+```{bash anacondareq, eval=FALSE}
+yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver
+```
+
+```{bash getAnaconda, eval=FALSE}
+wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh .
+```
+
+Then:
+
+```{bash installSalmon, eval=FALSE}
+conda install -c bioconda salmon
+conda install -c "bioconda/label/cf201901" salmon
+conda config --add channels bioconda
+conda create -n salmon salmon
+conda activate salmon
+salmon -h
+```
+
+
+
 ## RSEM    (2nd favourite)
+
+https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-323
+https://github.com/deweylab/RSEM
+
+* Installation
+https://anaconda.org/bioconda/rsem
+
+```{bash Rsem, eval=FALSE}
+conda install -c bioconda rsem
+conda install -c "bioconda/label/cf201901" rsem
+```
+
+I went out of space :/
 
 # Exon/intron quantification
 
@@ -414,6 +453,7 @@ BiocManager::install("ensembldb")
 BiocManager::install("BSgenome")
 BiocManager::install("BSgenome")
 BiocManager::install("biovizBase")
+BiocManager::install("DESeq2") 
 ```
 
 

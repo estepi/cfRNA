@@ -574,6 +574,7 @@ files with the genome reference sequences.</p>
 <pre class="bash"><code>STAR --runThreadN 4 --runMode genomeGenerate --genomeDir /home/ec2-user/references/GRCh38_STAR --genomeFastaFiles /home/ec2-user/references/GRCh38.p13.genome.fa --sjdbGTFfile /home/ec2-user/references/gencode.v39.chr_patch_hapl_scaff.annotation.gtf --sjdbOverhang 74 </code></pre>
 <ul>
 <li>Por que ENCODE and not ENSEMBL?</li>
+<li>Me quede sin memoria</li>
 </ul>
 </div>
 </div>
@@ -585,9 +586,29 @@ files with the genome reference sequences.</p>
 <h1>Transcript quantification</h1>
 <div id="salmon-favourite" class="section level2">
 <h2>Salmon (favourite)</h2>
+<ul>
+<li>Installation <a href="https://docs.anaconda.com/anaconda/install/linux/" class="uri">https://docs.anaconda.com/anaconda/install/linux/</a> <a href="https://anaconda.org/bioconda/salmon" class="uri">https://anaconda.org/bioconda/salmon</a></li>
+</ul>
+<pre class="bash"><code>yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver</code></pre>
+<pre class="bash"><code>wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh .</code></pre>
+<p>Then:</p>
+<pre class="bash"><code>conda install -c bioconda salmon
+conda install -c &quot;bioconda/label/cf201901&quot; salmon
+conda config --add channels bioconda
+conda create -n salmon salmon
+conda activate salmon
+salmon -h</code></pre>
 </div>
 <div id="rsem-2nd-favourite" class="section level2">
 <h2>RSEM (2nd favourite)</h2>
+<p><a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-323" class="uri">https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-323</a>
+<a href="https://github.com/deweylab/RSEM" class="uri">https://github.com/deweylab/RSEM</a></p>
+<ul>
+<li>Installation <a href="https://anaconda.org/bioconda/rsem" class="uri">https://anaconda.org/bioconda/rsem</a></li>
+</ul>
+<pre class="bash"><code>conda install -c bioconda rsem
+conda install -c &quot;bioconda/label/cf201901&quot; rsem</code></pre>
+<p>I went out of space :/</p>
 </div>
 </div>
 <div id="exonintron-quantification" class="section level1">
@@ -668,7 +689,8 @@ BiocManager::install(&quot;GenomicFeatures&quot;)
 BiocManager::install(&quot;ensembldb&quot;)
 BiocManager::install(&quot;BSgenome&quot;)
 BiocManager::install(&quot;BSgenome&quot;)
-BiocManager::install(&quot;biovizBase&quot;)</code></pre>
+BiocManager::install(&quot;biovizBase&quot;)
+BiocManager::install(&quot;DESeq2&quot;) </code></pre>
 <ul>
 <li>ASpli</li>
 </ul>
