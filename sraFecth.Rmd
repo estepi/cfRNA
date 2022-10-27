@@ -1,0 +1,29 @@
+---
+title: "SRA Fecthing"
+author: "Estefania Mancini"
+date: "2022-10-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#  Fetch data from SRA
+
+```{bash clone, eval=FALSE}
+git clone https://github.com/nf-core/fetchngs.git
+```
+
+
+```{bash run, eval=FALSE}
+nextflow run fetchngs -profile test --outdir raw
+```
+
+* Ok
+
+![ok](fetch1.png)
+
+
+* Error: 
+![error fetch2](fetch2.png)
