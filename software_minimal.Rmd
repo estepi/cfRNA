@@ -1,0 +1,452 @@
+---
+title: "Requiered software for the analysis of AS using RNA-Seq"
+author: "Estefania Mancini"
+date: "2022-10-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+# Project structure
+We propose this structure:
+
+* DATA: divided by project
+* SOFTWARE: common to all projects
+* REFERECES (genome, transcriptome, etc)
+
+```{bash mkdir, eval=FALSE}
+mkdir data software references data/SRAtest
+```
+
+# References
+From  Gencode v39:  https://www.gencodegenes.org/human/release_39.html
+
+* GTF superset: 
+```{bash gtf, eval=FALSE}
+cd  ~/references
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.chr_patch_hapl_scaff.annotation.gtf.gz .
+gunzip gencode.v39.chr_patch_hapl_scaff.annotation.gtf.gz 
+```
+
+* Fasta Transcriptome:
+
+```{bash transcriptome, eval=FALSE}
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.transcripts.fa.gz
+gunzip gencode.v39.transcripts.fa.gz 
+```
+
+* Fasta genome: 
+
+```{bash genome, eval=FALSE}
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh38.p13.genome.fa.gz .
+gunzip    
+```
+
+# Data 
+
+```{bash cd, eval=FALSE}
+cd ~/software/
+```
+
+## sratoolkit
+
+source: https://github.com/ncbi/sra-tools
+
+```{bash getsratoolkit, eval=FALSE}
+
+wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-centos_linux64.tar.gz
+tar -zxf sratoolkit.current-centos_linux64.tar.gz 
+export PATH=$PATH:$PWD/sratoolkit.3.0.0-centos_linux64/bin
+```
+
+### Configure vdb
+
+```{bash configure, eval=FALSE}
+vdb-config --interactive
+```
+
+Source: https://github.com/ncbi/sra-tools/wiki/05.-Toolkit-Configuration
+
+### Get some test data from dataset
+
++ Option 1
+```{bash dump1, eval=FALSE}
+cd  ~/data/SRAtest
+fastq-dump --stdout -X 2 SRR390728
+```
+
++ Option 2
+
+```{bash fetch, eval=FALSE}
+prefetch SRR17333143
+fastq-dump --outdir SRR17333143_fastq --gzip --skip-technical  --readids --read-filter pass --dumpbase --split-3 --clip SRR17333143 &
+```
+
+
+## Fastqc
+
+### Installation
+source https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+
+* We should install JAVA first. Any clue? 
+
+```{bash java, eval=FALSE}
+sudo yum install java-1.8.0-openjdk-devel
+```
+
+Then we get fastqc:
+
+```{bash fastqc, eval=FALSE}
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+unzip fastqc_v0.11.9.zip 
+cd FastQC
+chmod ug+x fastqc
+export PATH=$PATH:~/software/FastQC/
+```
+
+ * Run
+
+```{bash fastqcRun, eval=FALSE}
+cd ~/data/SRAtest/SRR17333143_fastq
+fastqc  SRR17333143_pass_1.fastq.gz
+fastqc  SRR17333143_pass_2.fastq.gz
+```
+
+# Libraries
+
+* For STAR
+```{bash zlib, eval=FALSE}
+sudo yum install zlib
+sudo yum install zlib-devel
+sudo yum  install zlib1g-dev
+sudo yum -y install gcc
+sudo  yum install gcc-c++ 
+```
+
+* For R
+
+```{bash xml2, eval=FALSE}
+sudo yum install libxml2-devel
+sudo yum install pcre-devel
+sudo yum install perl-IPC-Cmd
+sudo yum makecache
+sudo yum install -y texlive
+sudo yum -y install texlive-pdftex
+sudo yum install gcc-gfortran
+sudo yum install readline-devel 
+sudo yum install libbz2-dev
+sudo yum install cairo-devel pango-devel
+sudo yum install libXt-devel
+sudo yum install bzip2-devel
+sudo yum reinstall libcurl curl libcurl-devel
+sudo yum install cairo-devel pango-devel libpng-devel
+sudo yum install  openssl-devel
+sudo yum install libjpeg-turbo-devel
+
+```
+
+```{bash openssl, eval=FALSE}
+wget https://ftp.openssl.org/source/openssl-3.0.5.tar.gz
+tar xvf openssl-3.0.5.tar.gz 
+cd openssl-3.0.5/
+./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
+echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> ~/.bashrc
+openssl version
+```
+
+# Alignments
+
+## STAR
+
+https://github.com/alexdobin/STAR
+https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+
+* Installation:
+
+* Get latest STAR source from releases
+
+```{bash STAR, eval=FALSE}
+cd ~/software
+wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz
+tar xvzf 2.7.10a.tar.gz 
+```
+
+* Compile
+
+```{bash compileSTAR2, eval=FALSE}
+cd STAR-2.7.10a/source/
+make STAR
+  ./STAR --help
+
+sudo ln -s /home/ec2-user/software/STAR-2.7.10a/source/STAR /usr/local/bin/STAR
+```
+Done! 
+
+* Make an index for 75pb, basic options:
+
+
+```{bash genomeIndex, eval=FALSE}
+cd ~/references
+STAR --runThreadN 10 --runMode genomeGenerate --genomeDir /home/ec2-user/references/GRCh38_STAR75 --genomeFastaFiles /home/ec2-user/references/GRCh38.p13.genome.fa --sjdbGTFfile /home/ec2-user/references/gencode.v39.chr_patch_hapl_scaff.annotation.gtf --sjdbOverhang 74 &
+```
+
+* Por que ENCODE and not ENSEMBL?
+* Me quede sin memoria
+
+Do the alignment:
+
+```{bash genomeAlign, eval=FALSE}
+cd ~/data/SRAtest/SRR17333143/02_AlignGenome
+
+STAR    --runThreadN 30\
+          --genomeDir ~/references/GRCh38_STAR\
+          --genomeLoad NoSharedMemory\
+          --readFilesIn SRR17333143_1.fastq.gz SRR17333143_2.fastq.gz\
+          --readFilesCommand zcat\
+          --outFileNamePrefix SRR17333143.\
+          --outReadsUnmapped Fastx\
+          --outSAMattributes NH HI AS nM NM MD jM jI XS\
+          --outSJfilterOverhangMin 15 15 15 15\
+          --outFilterMultimapNmax 20\
+          --outFilterScoreMin 1\
+          --outFilterMatchNminOverLread 0.7\
+          --outFilterMismatchNmax 999\
+          --outFilterMismatchNoverLmax 0.05\
+          --alignIntronMin 20\
+          --alignIntronMax 1000000\
+          --alignMatesGapMax 1000000\
+          --alignSJoverhangMin 15\
+          --alignSJDBoverhangMin 10\
+          --alignSoftClipAtReferenceEnds No\
+          --chimSegmentMin 15\
+          --chimScoreMin 15\
+          --chimScoreSeparation 10\
+          --chimJunctionOverhangMin 15\
+          --outSAMtype BAM Unsorted SortedByCoordinate \
+          --chimOutType Junctions SeparateSAMold
+```
+
+# Gene quantification
+
+We use STAR default output for gene count
+
+# Transcript quantification
+
+## Salmon  (favourite)
+
+* Installation
+
+https://docs.anaconda.com/anaconda/install/linux/
+https://anaconda.org/bioconda/salmon
+
+```{bash anacondareq, eval=FALSE}
+sudo yum install libXcomposite libXcursor libXi libXtst libXrandr alsa-lib mesa-libEGL libXdamage mesa-libGL libXScrnSaver
+wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh .
+```
+
+* Miniconda (multiplai)
+
+```{bash instalMiniconda, eval=FALSE}
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod ug+x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
+```
+To make the changes take effect, close and then re-open your terminal window.! 
+
+Then:
+
+```{bash installConda, eval=FALSE}
+conda config --set auto_activate_base false
+conda config --add channels bioconda
+```
+
+## Salmon
+
+```{bash installSalmon, eval=FALSE}
+conda install -c bioconda salmon
+conda install -c "bioconda/label/cf201901" salmon
+conda create -n salmon salmon
+conda activate salmon
+salmon -h
+```
+
+## RSEM    (2nd favourite)
+
+https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-323
+https://github.com/deweylab/RSEM
+
+* Installation
+https://anaconda.org/bioconda/rsem
+
+```{bash Rsem, eval=FALSE}
+conda install -c bioconda rsem
+conda install -c "bioconda/label/cf201901" rsem
+```
+
+
+# MultiQC
+
+
+Test MultiQC on our samples:
+
+```{bash multiQC, eval=FALSE}
+cd ~/data/SRAtest
+multiqc -p dat 
+```
+
+# Samtools
+
+```{bash samtools, eval=FALSE}
+wget https://github.com/samtools/samtools/releases/download/1.16.1/samtools-1.16.1.tar.bz2
+
+tar xvjf samtools-1.16.1.tar.bz2 
+cd samtools-1.16.1/
+./configure
+make
+sudo make install
+```
+
+```{bash samtools, eval=FALSE}
+wget https://github.com/samtools/samtools/releases/download/1.16.1/samtools-1.16.1.tar.bz2
+
+tar xvjf samtools-1.16.1.tar.bz2 
+cd samtools-1.16.1/
+./configure
+make
+sudo make install
+```
+
+# Bedtools
+
+```{bash bedtools, eval=FALSE}
+
+wget https://github.com/arq5x/bedtools2/releases/download/v2.29.1/bedtools-2.29.1.tar.gz
+tar -zxvf bedtools-2.29.1.tar.gz
+$ cd bedtools2
+$ make
+
+# R
+
+* Install R latest version from source
+
+Check which is last version: https://cran.rstudio.com/src/base/
+
+
+```{bash Rversion, eval=FALSE}
+export R_VERSION=4.2.1
+```
+
+```{bash RversionVar, eval=FALSE}
+curl -O https://cran.rstudio.com/src/base/R-4/R-${R_VERSION}.tar.gz
+tar -xzvf R-${R_VERSION}.tar.gz
+cd R-${R_VERSION}
+```
+
+* Install
+
+```{bash Rconf, eval=FALSE}
+./configure \
+    --prefix=/opt/R/${R_VERSION} \
+    --enable-memory-profiling \
+    --enable-R-shlib \
+    --with-blas \
+    --with-lapack \
+    --with-pcre1
+```
+
+
+* Build and install R
+
+Build and install R by running the following commands:
+
+```{bash Rmake, eval=FALSE}
+make
+sudo make install
+```
+
+* Verify R installation
+Test that R was successfully installed by running:
+
+
+```{bash Rversionsource, eval=FALSE}
+/opt/R/${R_VERSION}/bin/R --version
+```
+
+* Create a symlink to R
+To ensure that R is available on the default system PATH variable, create symbolic links to the version of R that you installed:
+
+```{bash symlink, eval=FALSE}
+sudo ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R
+sudo ln -s /opt/R/${R_VERSION}/bin/Rscript /usr/local/bin/Rscript
+```
+
+
+* (Optional) Install recommended packages
+
+
+*  Bioconductor
+
+```{R bioc, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install(version = "3.15")
+```
+
+*  Useful packages:
+```{R packages, eval=FALSE}
+install.packages("rmarkdown")
+install.packages("openssl")
+install.packages("httr")
+install.packages("tidyverse")
+install.packages("ggplot2")
+
+```
+
+
+* Useful packages from Bioconductor
+
+# Exon/intron quantification
+ASpli
+
+```{R ASpli, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("biomaRt")
+BiocManager::install("rtracklayer")
+BiocManager::install("AnnotationDbi")
+BiocManager::install("GenomicFeatures")
+BiocManager::install("ensembldb")
+BiocManager::install("BSgenome")
+
+BiocManager::install("biovizBase")
+BiocManager::install("DESeq2") 
+```
+
+* testing if installed package can be loaded from final location
+
+ERROR: dependency 'jpeg' is not available for package 'latticeExtra'
+* removing '/home/ec2-user/R/x86_64-pc-linux-gnu-library/4.2/latticeExtra'
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+ERROR: dependency 'latticeExtra' is not available for package 'Hmisc'
+* removing '/home/ec2-user/R/x86_64-pc-linux-gnu-library/4.2/Hmisc'
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+ERROR: dependency 'Hmisc' is not available for package 'biovizBase'
+* removing '/home/ec2-user/R/x86_64-pc-linux-gnu-library/4.2/biovizBase'
+
+
+* ASpli
+
+```{R ASpli0, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ASpli")
+```
+
+
