@@ -8,7 +8,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 ```
 
-
 ## References (for the 1st time)
 From  Gencode v39:  https://www.gencodegenes.org/human/release_39.html
 
