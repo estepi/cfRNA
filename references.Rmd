@@ -1,0 +1,36 @@
+---
+title: "References"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+
+## References (for the 1st time)
+From  Gencode v39:  https://www.gencodegenes.org/human/release_39.html
+
+* GTF superset: 
+
+```{bash gtf, eval=FALSE}
+cd  ~/references
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.chr_patch_hapl_scaff.annotation.gtf.gz .
+gunzip gencode.v39.chr_patch_hapl_scaff.annotation.gtf.gz 
+```
+
+* Fasta Transcriptome:
+
+```{bash transcriptome, eval=FALSE}
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.transcripts.fa.gz
+gunzip gencode.v39.transcripts.fa.gz 
+```
+
+* Fasta genome: 
+
+```{bash genome, eval=FALSE}
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh38.p13.genome.fa.gz .
+gunzip    
+```
+

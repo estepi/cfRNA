@@ -291,6 +291,13 @@ conda install -c "bioconda/label/cf201901" rsem
 # MultiQC
 
 
+```{bash pipInstall, eval=FALSE}
+sudo yum install epel-release
+sudo amazon-linux-extras install epel
+sudo yum install python-pip
+pip3 install multiqc
+```
+
 Test MultiQC on our samples:
 
 ```{bash multiQC, eval=FALSE}
@@ -300,7 +307,7 @@ multiqc -p dat
 
 # Samtools
 
-```{bash samtools, eval=FALSE}
+```{bash samtoolsGet, eval=FALSE}
 wget https://github.com/samtools/samtools/releases/download/1.16.1/samtools-1.16.1.tar.bz2
 
 tar xvjf samtools-1.16.1.tar.bz2 
@@ -426,20 +433,6 @@ BiocManager::install("BSgenome")
 BiocManager::install("biovizBase")
 BiocManager::install("DESeq2") 
 ```
-
-* testing if installed package can be loaded from final location
-
-ERROR: dependency 'jpeg' is not available for package 'latticeExtra'
-* removing '/home/ec2-user/R/x86_64-pc-linux-gnu-library/4.2/latticeExtra'
-During startup - Warning message:
-Setting LC_CTYPE failed, using "C" 
-ERROR: dependency 'latticeExtra' is not available for package 'Hmisc'
-* removing '/home/ec2-user/R/x86_64-pc-linux-gnu-library/4.2/Hmisc'
-During startup - Warning message:
-Setting LC_CTYPE failed, using "C" 
-ERROR: dependency 'Hmisc' is not available for package 'biovizBase'
-* removing '/home/ec2-user/R/x86_64-pc-linux-gnu-library/4.2/biovizBase'
-
 
 * ASpli
 

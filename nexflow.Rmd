@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Installation
 
+(under Estefi_32GbRAM)
+
 +  Check requisites
 
 

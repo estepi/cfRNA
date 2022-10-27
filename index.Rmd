@@ -7,18 +7,31 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Project structure
+
+We propose this structure:
+
+* DATA: divided by project
+* SOFTWARE: common to all projects
+* REFERENCES (genome, transcriptome, etc)
+
+```{bash mkdir, eval=FALSE}
+mkdir data software references data/SRAtest
+```
+
+## References 
++  [Getting references](references.html)
+
+## Software installation in AWS
+
++  [Software standalone](software_minimal.html)
++  [Netflow](nextflow.html)
+
+### Pipelines (using nextflow)
+
++  [FETCH from SRA](sraFetch.html)
++  [RNASEQ](rnaseq.html)
 
 ## Dataset description
 
 +  [Dataset](description.html)
-
-## Software installation
-
-+  [Software minimal](software_minimal.html)
-+  [Software extended](software.html)
-+  [Netflow](nextflow.html)
-
-## Pipelines
-
-+  [FETCH from SRA](sraFetch.html)
-+  [RNASEQ](rnaseq.html)
