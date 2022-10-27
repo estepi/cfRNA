@@ -94,7 +94,3 @@ Server:
   GitCommit:        de40ad0
 ```
 
-* Pipelines
-
-+  [FETCH from SRA](sraFetch.html)
-+  [RNASEQ](rnaseq.html)

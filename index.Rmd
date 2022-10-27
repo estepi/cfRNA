@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 +  [Software minimal](software_minimal.html)
 +  [Software extended](software.html)
++  [Netflow](nextflow.html)
 
 ## Pipelines
 
