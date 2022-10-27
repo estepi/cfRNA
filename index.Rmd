@@ -1,0 +1,23 @@
+---
+title: "Index"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Dataset description
+
++  [Dataset](description.html)
+
+## Software installation
+
++  [Software minimal](software_minimal.html)
++  [Software extended](software.html)
+
+## Pipelines
+
++  [FETCH from SRA](sraFetch.html)
++  [RNASEQ](rnaseq.html)
