@@ -26,6 +26,8 @@ mkdir data software references data/SRAtest
 
 +  [Software standalone](software_minimal.html)
 +  [Netflow](nextflow.html)
++  [Netflow batch](nextflow_batch.html)
++  [AWS CLI](awsclli.html)
 
 ### Pipelines (using nextflow)
 
