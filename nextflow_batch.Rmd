@@ -1,0 +1,80 @@
+---
+title: "Nextlow AWS"
+author: "Estefania Mancini"
+date: "2022-11-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{bash java,  eval=FALSE}
+
+```
+
+# Data location
+
+##  Everthing should be placed in S3
+
+## Conf files
+
+* Get using git
+
+```{bash gitclone, eval=FALSE}
+ git clone https://github.com/nf-core/fetchngs
+ git clone https://github.com/nf-core/rnaseq 
+ 
+``` 
+
+
+* Edit
+
+* Copy to S3
+
+
+## References
+
+They are in the instance: "Estefi_Alan"
+
+
+```{bash copy, eval=FALSE}
+aws s3 cp  GRCh38.p13.genome.fa s3://data-team-experimentation/references/
+aws s3 cp   gencode.v39.transcripts.fa s3://data-team-experimentation/references/ 
+aws s3 cp  gencode.v39.chr_patch_hapl_scaff.annotation.gtf  s3://data-team-experimentation/references/
+``` 
+
+
+## Input
+
+Fot test data "preclampsia"
+
+Folder: /home/ec2-user/data/SRAtest
+
+* Todo tiene que estar en una instancia (Estefi_Alan) y de ahi pasamos a S3.
+* En la instancia de nextflow solo los scripts que ejecutamnos.
+* Edito todos los pipelines aca, y los envio a S3
+
+
+
+##Errores:
+* VPC endpoints do not support cross-region requests 
+
+* retrieven all data -> Job name: srafetchAll
+https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups/log-group/$252Faws$252Fbatch$252Fjob/log-events/nextflow-multiplai-nextflow$252Fdefault$252F15153e9c48f547f19b9dee1682156b62
+
+
+* Sending email: not working?
+
+
+* test_full: failed
+https://us-east-1.console.aws.amazon.com/batch/home?region=us-east-1#jobs/detail/d090de94-582a-4590-8c5c-d3ffded3c131
+
+Nov-03 11:50:42.511 [main] ERROR nextflow.cli.Launcher - @unknown
+com.amazonaws.services.s3.model.AmazonS3Exception: VPC endpoints do not support cross-region requests (Service: Amazon S3; Status Code: 403; 
+
+Error Code: AccessDenied; Request ID: MT9P4NH98F3J8WQP; S3 Extended Request ID: f7BKZB78eeXNQRtc0L78UrJxIJcpf7WZZwVgECXGfo2JoCFLv860xXkbZ4mpblK6qk0E3+EL+Wk=; Proxy: null)
+
+
+https://aws.amazon.com/premiumsupport/knowledge-center/emr-s3-403-access-denied/
+
