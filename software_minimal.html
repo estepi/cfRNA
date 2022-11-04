@@ -438,6 +438,15 @@ export PATH=$PATH:~/software/FastQC/</code></pre>
 <pre class="bash"><code>cd ~/data/SRAtest/SRR17333143_fastq
 fastqc  SRR17333143_pass_1.fastq.gz
 fastqc  SRR17333143_pass_2.fastq.gz</code></pre>
+<ul>
+<li>Bowtie2:</li>
+</ul>
+<pre class="bash"><code>conda install -c bioconda bowtie2</code></pre>
+<ul>
+<li>Or add to Salmon env:</li>
+</ul>
+<pre class="bash"><code>conda activate salmon
+(salmon) conda install -c bioconda bowtie2</code></pre>
 </div>
 </div>
 </div>

@@ -115,6 +115,19 @@ fastqc  SRR17333143_pass_1.fastq.gz
 fastqc  SRR17333143_pass_2.fastq.gz
 ```
 
+* Bowtie2:
+
+```{bash bowtie2, eval=FALSE}
+conda install -c bioconda bowtie2
+```
+
+* Or add to Salmon env:
+
+```{bash bowtie2env, eval=FALSE}
+conda activate salmon
+(salmon) conda install -c bioconda bowtie2
+```
+
 # Libraries
 
 * For STAR
@@ -125,6 +138,8 @@ sudo yum  install zlib1g-dev
 sudo yum -y install gcc
 sudo  yum install gcc-c++ 
 ```
+
+
 
 * For R
 
