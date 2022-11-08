@@ -29,7 +29,14 @@ mkdir data software references data/SRAtest
 +  [Nextflow batch](nextflow_batch.html)
 +  [AWS CLI](awsclli.html)
 
-### Pipelines (using nextflow)
+## Software commands
+
++  [STAR](star.html)
++  [SALMON](salmon.html)
+
+# Nextflow
+
+## Pipelines (using nextflow)
 
 +  [FETCH from SRA](sraFetch.html)
 +  [RNASEQ](rnaseq.html)

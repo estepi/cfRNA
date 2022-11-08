@@ -78,3 +78,4 @@ Error Code: AccessDenied; Request ID: MT9P4NH98F3J8WQP; S3 Extended Request ID: 
 
 https://aws.amazon.com/premiumsupport/knowledge-center/emr-s3-403-access-denied/
 
+* Friday:

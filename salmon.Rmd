@@ -1,0 +1,23 @@
+---
+title: "SALMON"
+author: "Estefania Mancini"
+date: "2022-11-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Tx Alignment from fastq (05a)
+
+```{bash salmona, eval=FALSE}
+A. Alignment mode: input = bam, referencia = fasta de transcriptos
+``` 
+
+# Tx Alignment from STAR-04b (05b)
+
+```{bash salmonb, eval=FALSE}
+B. Mapping mode: input = fastq, referencia = indice o fasta, pero fasta es mas lento
+``` 

@@ -1,0 +1,107 @@
+---
+title: "STAR"
+author: "Estefania Mancini"
+date: "2022-11-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Genome Alignment (03a)
+
+```{bash stara, eval=FALSE}
+STAR    --runThreadN $thr\
+          --genomeDir $3\
+          --genomeLoad NoSharedMemory\
+          --readFilesIn $1 $2\
+          --readFilesCommand zcat\
+          --outFileNamePrefix $4/$out/$out.\
+          --outReadsUnmapped Fastx\
+          --outSAMattributes NH HI AS nM NM MD jM jI XS\
+          --outSJfilterOverhangMin 15 15 15 15\
+          --outFilterMultimapNmax 20\
+          --outFilterScoreMin 1\
+          --outFilterMatchNminOverLread 0.7\
+          --outFilterMismatchNmax 999\
+          --outFilterMismatchNoverLmax 0.05\
+          --alignIntronMin 20\
+          --alignIntronMax 1000000\
+          --alignMatesGapMax 1000000\
+          --alignSJoverhangMin 15\
+          --alignSJDBoverhangMin 10\
+          --alignSoftClipAtReferenceEnds No\
+          --chimSegmentMin 15\
+          --chimScoreMin 15\
+          --chimScoreSeparation 10\
+          --chimJunctionOverhangMin 15\
+          --outSAMtype BAM Unsorted SortedByCoordinate \
+          --chimOutType Junctions SeparateSAMold
+``` 
+
+# Genome Alignment (03b)
+```{bash starb, eval=FALSE}
+STAR    --runThreadN $thr\
+          --genomeDir $3\
+          --genomeLoad NoSharedMemory\
+          --readFilesIn $1 $2\
+          --readFilesCommand zcat\
+          --outFileNamePrefix $4/$out/$out.\
+          --outReadsUnmapped Fastx\
+          --outSAMattributes NH HI AS nM NM MD jM jI XS\
+          --outSJfilterOverhangMin 15 15 15 15\
+          --outFilterMultimapNmax 20\
+          --outFilterScoreMin 1\
+          --outFilterMatchNminOverLread 0.7\
+          --outFilterMismatchNmax 999\
+          --outFilterMismatchNoverLmax 0.05\
+          --alignIntronMin 20\
+          --alignIntronMax 1000000\
+          --alignMatesGapMax 1000000\
+          --alignSJoverhangMin 15\
+          --alignSJDBoverhangMin 10\
+          --alignSoftClipAtReferenceEnds No\
+          --chimSegmentMin 15\
+          --chimScoreMin 15\
+          --chimScoreSeparation 10\
+          --chimJunctionOverhangMin 15\
+          --outSAMtype BAM Unsorted SortedByCoordinate \
+          --chimOutType Junctions SeparateSAMold\
+          --quantMode GeneCounts 
+``` 
+
+# Tx Alignment (04)
+
+```{bash starTx, eval=FALSE}
+
+STAR    --runThreadN $thr\
+            --genomeDir ${3}\
+            --genomeLoad NoSharedMemory\
+            --readFilesIn ${1} ${2}\
+            --readFilesCommand zcat\
+            --outFileNamePrefix $4/$out/$out.\
+            --outReadsUnmapped Fastx\
+            --outSAMattributes NH HI AS nM NM MD jM jI ch\
+            --outSJfilterOverhangMin 15 15 15 15\
+            --outFilterMultimapNmax 20\
+            --outFilterScoreMin 1\
+            --outFilterMatchNminOverLread 0.7\
+            --outFilterMismatchNmax 999\
+            --outFilterMismatchNoverLmax 0.05\
+            --alignIntronMin 20\
+            --alignIntronMax 1000000\
+            --alignMatesGapMax 1000000\
+            --alignSJoverhangMin 15\
+            --alignSJDBoverhangMin 10\
+            --alignSoftClipAtReferenceEnds No\
+            --chimSegmentMin 15\
+            --chimScoreMin 15\
+            --chimScoreSeparation 10\
+            --chimJunctionOverhangMin 15\
+            --outSAMtype BAM Unsorted SortedByCoordinate\
+            --quantMode TranscriptomeSAM GeneCounts\
+            --chimOutType Junctions SeparateSAMold WithinBAM\
+            --twopassMode Basic 
+``` 
