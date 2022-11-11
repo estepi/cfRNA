@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Estefania Mancini" />
 
+<meta name="date" content="2022-11-11" />
 
-<title>Index</title>
+<title>Nexflow_pipelines</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -348,64 +350,97 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Index</h1>
+<h1 class="title toc-ignore">Nexflow_pipelines</h1>
+<h4 class="author">Estefania Mancini</h4>
+<h4 class="date">2022-11-11</h4>
 
 </div>
 
 
-<div id="project-structure" class="section level1">
-<h1>Project structure</h1>
-<p>We propose this structure:</p>
+<div id="nexflow" class="section level2">
+<h2>Nexflow</h2>
+<pre class="bash"><code>aws batch submit-job \
+    --job-name rnaseqDL_full\
+    --job-queue default-multiplai-nextflow\
+    --job-definition nextflow-multiplai-nextflow\
+    --container-overrides command=s3://data-team-experimentation/nf-core/rnaseq,\
+&quot;--outdir&quot;,&quot;&#39;s3://data-team-experimentation/nextflow-test_full&#39;&quot;,\
+&quot;-profile&quot;,&quot;test_full&quot;,\
+&quot;--email&quot;,&quot;&#39;soyestepi@gmail.com&#39;&quot;,\
+&quot;--multiqc_title&quot;,&quot;test_full_RNASeq&quot; 
+
+* s3://data-team-experimentation/nextflow-test_full</code></pre>
+<p>FAILED:</p>
+<p><a href="https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups/log-group/$252Faws$252Fbatch$252Fjob/log-events/nextflow-multiplai-nextflow$252Fdefault$252Ff4767e89fbfa4a7c808fc54a190f3bff" class="uri">https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups/log-group/$252Faws$252Fbatch$252Fjob/log-events/nextflow-multiplai-nextflow$252Fdefault$252Ff4767e89fbfa4a7c808fc54a190f3bff</a></p>
+<p>Error:</p>
+<pre class="bash"><code> EXITING because of FATAL PARAMETER ERROR: limitGenomeGenerateRAM=6342450944is too small for your genome
+  SOLUTION: please specify --limitGenomeGenerateRAM not less than 8966723168 and make that much RAM available </code></pre>
+<p>Solution:</p>
+<pre class="bash"><code>// Add for STAR
+process {
+    withName: &#39;STAR_GENOMEGENERATE&#39; {
+        memory = 64.GB
+    }
+}</code></pre>
+<p>Error:</p>
+<pre class="bash"><code>
+Error executing process &gt; &#39;NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:SALMON_INDEX (gencode.v39.transcripts.fixed.fa)&#39;
+
+Caused by:
+  Essential container in task exited - OutOfMemoryError: Container killed due to memory usage
+
+Command exit status:   137</code></pre>
+<p>Solution: See docs, <a href="https://nf-co.re/rnaseq/usage#alignment-options" class="uri">https://nf-co.re/rnaseq/usage#alignment-options</a></p>
+<p>For example, if the nf-core/rnaseq pipeline is failing after multiple
+re-submissions of the STAR_ALIGN process due to an exit code of 137 this
+would indicate that there is an out of memory issue:</p>
+<pre class="bash"><code>// Add for STAR
+process {
+    withName: &#39;STAR_GENOMEGENERATE&#39; {
+        memory = 64.GB
+    }
+}</code></pre>
+<p>Or Add parameter:</p>
+<pre class="bash"><code>--max_memory 120GB</code></pre>
 <ul>
-<li>DATA: divided by project</li>
-<li>SOFTWARE: common to all projects</li>
-<li>REFERENCES (genome, transcriptome, etc)</li>
+<li>We can also add INDEXes as parametes:</li>
 </ul>
-<pre class="bash"><code>mkdir data software references data/SRAtest</code></pre>
-<div id="references" class="section level2">
-<h2>References</h2>
+<p>save indexes once they are built:</p>
+<pre class="bash"><code> --save_reference</code></pre>
 <ul>
-<li><a href="references.html">Getting references</a></li>
+<li>Working dir</li>
 </ul>
-</div>
-<div id="software-installation-in-aws" class="section level2">
-<h2>Software installation in AWS</h2>
+<pre class="bash"><code>  s3://multiplai-nextflow-results/_nextflow/runs/89/d6e38f8d1668aace84a21cba0de9f3</code></pre>
+<p>Then, we can add:</p>
+<pre class="bash"><code>&quot;--input&quot;,&quot;&#39;s3://data-team-experimentation/WT/wt1.csv&#39;&quot;,\
+&quot;--outdir&quot;,&quot;&#39;s3://data-team-experimentation/W1R&#39;&quot;,\
+&quot;-profile&quot;,&quot;test&quot;,\
+&quot;--max_memory&quot;,&quot;100GB&quot;,\
+&quot;--gencode&quot;,\
+&quot;--email&quot;,&quot;&#39;soyestepi@gmail.com&#39;&quot;,\
+&quot;--multiqc_title&quot;,&quot;W1&quot;,\
+&quot;--star_index&quot;,&quot;&#39;s3://data-team-experimentation/references/genome/index/star/&#39;&quot;,\
+&quot;--salmon_index&quot;,&quot;&#39;s3://data-team-experimentation/references/genome/index/salmon&#39;&quot;,\
+&quot;--fasta&quot;,&quot;&#39;s3://data-team-experimentation/references/GRCh38.p13.genome.fa&#39;&quot;,\
+&quot;--gtf&quot;,&quot;&#39;s3://data-team-experimentation/references/gencode.v39.chr_patch_hapl_scaff.annotation.gtf&#39;&quot;,\
+&quot;--transcript_fasta&quot;,&quot;&#39;s3://data-team-experimentation/references/gencode.v39.transcripts.fa&#39;&quot;</code></pre>
 <ul>
-<li><a href="software_minimal.html">Software standalone</a></li>
-<li><a href="nextflow.html">Nextflow</a></li>
-<li><a href="nextflow_batch.html">Nextflow batch</a></li>
-<li><a href="awsclli.html">AWS CLI</a></li>
+<li>previamente salvamos los indexes:</li>
 </ul>
-</div>
-<div id="software-commands" class="section level2">
-<h2>Software commands</h2>
+<pre class="bash"><code>Error executing process &gt; &#39;NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:STAR_GENOMEGENERATE (GRCh38.p13.genome.fa)&#39;
+Caused by:
+  Job attempt duration exceeded timeout</code></pre>
 <ul>
-<li><a href="star.html">STAR</a></li>
-<li><a href="salmon.html">SALMON</a></li>
+<li><p>Rm work directory, change memory size</p></li>
+<li><p>Rm test folders (~500Gb)</p></li>
+<li><p>Edit STAR:</p></li>
 </ul>
-</div>
-</div>
-<div id="nextflow" class="section level1">
-<h1>Nextflow</h1>
-<div id="pipelines-using-nextflow" class="section level2">
-<h2>Pipelines (using nextflow)</h2>
+<p>://nfcore.slack.com/archives/CE8SSJV3N/p1666968742980909</p>
 <ul>
-<li><a href="sraFetch.html">FETCH from SRA</a></li>
-<li><a href="rnaseq.html">RNASEQ</a></li>
+<li><p>tuve que agregarme de nuevo a las inbound rules</p></li>
+<li><p>Salmon index ALan copiar a:</p></li>
 </ul>
-</div>
-<div id="troubleshooting" class="section level2">
-<h2>Troubleshooting</h2>
-<ul>
-<li><a href="pipelines.html">Solutions</a></li>
-</ul>
-</div>
-</div>
-<div id="dataset-description" class="section level1">
-<h1>Dataset description</h1>
-<ul>
-<li><a href="description.html">Dataset</a></li>
-</ul>
+<pre class="bashxps3"><code>aws s3 cp salmon_indexes  s3://data-team-experimentation/references/ --recursive  --include &quot;*&quot;</code></pre>
 </div>
 
 

@@ -41,6 +41,11 @@ mkdir data software references data/SRAtest
 +  [FETCH from SRA](sraFetch.html)
 +  [RNASEQ](rnaseq.html)
 
+## Troubleshooting
+
++  [Solutions](pipelines.html)
+
+
 # Dataset description
 
 +  [Dataset](description.html)
