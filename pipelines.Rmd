@@ -127,13 +127,33 @@ Caused by:
 
 * Rm work directory, change memory size
 
-* Rm test folders (~500Gb)
+*     Rm test folders (~500Gb)
 
 * Edit STAR:
 
 \https://nfcore.slack.com/archives/CE8SSJV3N/p1666968742980909
 
+* Error SALMON
 
+```{bash salmon, eval=FALSE}
+ salmon quant \
+      --geneMap gencode.v39.chr_patch_hapl_scaff.annotation.gtf \
+      --threads 2 \
+      --libType=IU \
+      -t gencode.v39.transcripts.fixed.fa \
+      -a WT-1.Aligned.toTranscriptome.out.bam \
+      -o WT-1
+  Command error:
+  [2022-11-11 11:11:37.973] [jointLog] [critical] Transcript ENST00000383224.6 appeared in the BAM header, but was not in the provided FASTA file
+  [2022-11-11 11:11:37.973] [jointLog] [critical] Please provide a reference FASTA file that includes all targets present in the BAM header
+  If you have access to the genome FASTA and GTF used for alignment 
+  consider generating a transcriptome fasta using a command like: 
+  gffread -w output.fa -g genome.fa genome.gtf
+  you can find the gffread utility at (http://ccb.jhu.edu/software/stringtie/gff.shtml)
+```    
+
+
+  
 * tuve que agregarme de nuevo a las inbound rules
 
 * Salmon index ALan copiar a:
@@ -141,3 +161,5 @@ Caused by:
 ```{bashxps3, eval=FALSE}
 aws s3 cp salmon_indexes  s3://data-team-experimentation/references/ --recursive  --include "*"
 ```
+
+

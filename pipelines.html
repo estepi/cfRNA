@@ -432,10 +432,27 @@ Caused by:
   Job attempt duration exceeded timeout</code></pre>
 <ul>
 <li><p>Rm work directory, change memory size</p></li>
-<li><p>Rm test folders (~500Gb)</p></li>
+<li><pre><code>Rm test folders (~500Gb)</code></pre></li>
 <li><p>Edit STAR:</p></li>
 </ul>
 <p>://nfcore.slack.com/archives/CE8SSJV3N/p1666968742980909</p>
+<ul>
+<li>Error SALMON</li>
+</ul>
+<pre class="bash"><code> salmon quant \
+      --geneMap gencode.v39.chr_patch_hapl_scaff.annotation.gtf \
+      --threads 2 \
+      --libType=IU \
+      -t gencode.v39.transcripts.fixed.fa \
+      -a WT-1.Aligned.toTranscriptome.out.bam \
+      -o WT-1
+  Command error:
+  [2022-11-11 11:11:37.973] [jointLog] [critical] Transcript ENST00000383224.6 appeared in the BAM header, but was not in the provided FASTA file
+  [2022-11-11 11:11:37.973] [jointLog] [critical] Please provide a reference FASTA file that includes all targets present in the BAM header
+  If you have access to the genome FASTA and GTF used for alignment 
+  consider generating a transcriptome fasta using a command like: 
+  gffread -w output.fa -g genome.fa genome.gtf
+  you can find the gffread utility at (http://ccb.jhu.edu/software/stringtie/gff.shtml)</code></pre>
 <ul>
 <li><p>tuve que agregarme de nuevo a las inbound rules</p></li>
 <li><p>Salmon index ALan copiar a:</p></li>
