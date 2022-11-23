@@ -79,3 +79,13 @@ Error Code: AccessDenied; Request ID: MT9P4NH98F3J8WQP; S3 Extended Request ID: 
 https://aws.amazon.com/premiumsupport/knowledge-center/emr-s3-403-access-denied/
 
 * Friday:
+
+
+* Edit config file:
+
+nextflow.exception.AbortOperationException: The specified configuration file does not exist: /opt/work/2a1c530a-87b4-43ae-88cb-ecfa87bf4299/1/s3:/data-team-experimentation/nf-core/rnaseqbeta/conf/multiplai.conf -- check the name or choose another file
+
+
+Ah wait, no, config cannot be on s3
+
+Edit main.conf

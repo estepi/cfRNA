@@ -40,6 +40,8 @@ Tests:
 
 * c5.4xlarge: 32Gb RAM, 16 cores
 * c5a.8xlarge: 64Gb ram, 32 cores
+* c5a.16xlarge: 128Gb ram, 64 cores
+
 
 # Errors
 

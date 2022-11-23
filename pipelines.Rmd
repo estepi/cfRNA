@@ -151,9 +151,10 @@ Caused by:
   gffread -w output.fa -g genome.fa genome.gtf
   you can find the gffread utility at (http://ccb.jhu.edu/software/stringtie/gff.shtml)
 ```    
+ 
+- W1RS
+- W1R
 
-
-  
 * tuve que agregarme de nuevo a las inbound rules
 
 * Salmon index ALan copiar a:
